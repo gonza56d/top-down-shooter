@@ -13,15 +13,46 @@ document.addEventListener("click", () => {
     bullets.push(player.shoot());
 });
 
+// Spawn enemies every 2k millisecs
+setInterval(() => {
+    const edge = Math.floor(Math.random() * 4);
+    let x, y;
+
+    if (edge === 0) { // at the top
+        x = Math.random() * canvas.width;
+        y = -20;
+    } else if (edge === 1) { // at the right
+        x = canvas.width + 20;
+        y = Math.random() * canvas.height;
+    } else if (edge === 2) { // at the bottom
+        x = Math.random() * canvas.width;
+        y = canvas.height + 20;
+    } else { // left
+        x = -20;
+        y = Math.random() * canvas.height;
+    }
+
+    enemies.push(new Enemy(x, y));
+}, 2000);
+
 function update() {
     player.update(keys);
-    bullets.forEach(b => b.update());
+
+    for (let i = bullets.length - 1; i >= 0; i++) {
+        bullets[i].update();
+        if (bullets[i].y < 0) {
+            bullets.splice(i, 1);
+        }
+    }
+
+    enemies.forEach(e => e.update(player));
 }
 
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     player.draw(ctx);
     bullets.forEach(b => b.draw(ctx));
+    enemies.forEach(e => e.draw(ctx));
 }
 
 function gameLoop() {
