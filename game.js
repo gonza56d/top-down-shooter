@@ -38,7 +38,7 @@ setInterval(() => {
 function update() {
     player.update(keys);
 
-    for (let i = bullets.length - 1; i >= 0; i++) {
+    for (let i = bullets.length - 1; i >= 0; i--) {
         bullets[i].update();
         if (bullets[i].y < 0) {
             bullets.splice(i, 1);
@@ -46,10 +46,26 @@ function update() {
     }
 
     enemies.forEach(e => e.update(player));
+
+    for (let i = bullets.length - 1; i >= 0; i--) {
+        const bullet = bullets[i];
+
+        for (let j = enemies.length - 1; j >= 0; j--) {
+            const enemy = enemies[j];
+
+            if (isColliding(bullet, enemy)) {
+                bullets.splice(i, 1);
+                enemies.splice(j, 1);
+                break;
+            }
+        }
+    }
 }
 
 function draw() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = 'black';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    //ctx.clearRect(0, 0, canvas.width, canvas.height);
     player.draw(ctx);
     bullets.forEach(b => b.draw(ctx));
     enemies.forEach(e => e.draw(ctx));
