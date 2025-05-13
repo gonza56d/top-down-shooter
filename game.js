@@ -4,6 +4,9 @@ const ctx = canvas.getContext("2d");
 const player = new Player(canvas.width / 2, canvas.height / 2);
 const bullets = [];
 const enemies = [];
+const walls = [
+    new Wall(300, 150, 100, 30),
+];
 
 const keys = {};
 
@@ -69,6 +72,7 @@ function draw() {
     player.draw(ctx);
     bullets.forEach(b => b.draw(ctx));
     enemies.forEach(e => e.draw(ctx));
+    walls.forEach(w => w.draw(ctx));
 }
 
 function gameLoop() {
